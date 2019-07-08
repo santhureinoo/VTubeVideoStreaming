@@ -1,0 +1,198 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="WebApplication1.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - My ASP.NET Application</title>
+
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+</head>
+<body>
+    <form id="form1" runat="server">
+        <asp:ContentPlaceHolder ID="Stylesheets" runat="server">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" type="text/css" />
+    </asp:ContentPlaceHolder>
+        <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+        <%: Scripts.Render("~/Scripts/umd/popper-utils.js") %>
+        <%: Scripts.Render("~/Scripts/umd/popper.js") %>
+        <%: Scripts.Render("~/Scripts/core/jquery.min.js") %>
+        <%: Scripts.Render("~/Scripts/core/bootstrap.min.js") %>
+        <%: Scripts.Render("~/Scripts/blk-design-system.js")%>
+        <%: Scripts.Render("~/Scripts/Typeahead.js") %>
+        <%: Scripts.Render("~/Scripts/bootstrap-tagsinput.js") %>
+        <%: Scripts.Render("~/Scripts/TinyMice.js") %>
+        <%: Scripts.Render("~/Scripts/LightBox.js") %>
+        <%: Scripts.Render("~/Scripts/summernote.js") %>
+    </asp:PlaceHolder>
+        <div class="modal fade" id="editProfile" tabindex="-1" role="dialog" 
+             aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">
+                            Edit Profile
+                        </h4>
+                        <button type="button" class="close" 
+                           data-dismiss="modal">
+                               <span aria-hidden="true">&times;</span>
+                               <span class="sr-only">Close</span>
+                        </button>
+                    </div>
+            
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                          <div class="form-group">
+                            <label for="name">Name</label>
+                              <input type="text" class="form-control w-100"
+                              id="name" name="name" placeholder="Enter New DisplayName" value="<%: curUser.DisplayName %>" required/>
+                               <sub id="errName"></sub>
+                          </div>
+                          <div class="form-group">
+                            <label for="email">Email(Changing Email Will Send Confirmation To Old Email)</label>
+                              <input type="email" class="form-control w-100"
+                              id="email" name="email" placeholder="Enter New Email" value="<%: curUser.Email %>" required/>
+                               <sub id="errEmail"></sub>
+                          </div>
+                          <div class="form-group">
+                            <label for="oldPass">Old Password(Required)</label>
+                              <input type="password" class="form-control w-100"
+                              id="oldPass" name="oldPass" placeholder="Enter Old Password"/>
+                                <sub id="errOldPass"></sub>
+                          </div>
+                          <div class="form-group">
+                            <label for="newPass">New Password</label>
+                              <input type="password" class="form-control w-100"
+                              id="newPass" name="newPass" placeholder="Enter New Password"/>
+                          </div>
+                    </div>
+            
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">
+                                    Close
+                        </button>
+                        <button type="button" id="update" class="btn btn-primary">
+                            Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav style="z-index:3" class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="Default.aspx">vTube</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#probootstrap-nav" aria-controls="probootstrap-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="probootstrap-nav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item"><a href="MoviesCounter.aspx" class="nav-link">Movies</a></li>
+             
+              <li class="nav-item probootstrap-cta probootstrap-seperator">
+                  <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <%: curUser.DisplayName %>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <button class="dropdown-item" data-toggle="modal" data-target="#editProfile" type="button">Edit Profile</button> 
+                 <!-- <a class="dropdown-item" href="#">Another action</a>-->
+                  <div class="dropdown-divider"></div>
+                    <asp:Button runat="server" Cssclass="dropdown-item" OnClick="Logout" Text="Log Out"></asp:Button>
+                </div>
+              </li>
+            </ul>
+           
+          </div>
+        </div>
+      </nav>
+        
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <script>
+                $(window).ready(function () {
+                    $('.carouselPrograms').on('slide.bs.carousel', function (e) {
+                        var $e = $(e.relatedTarget);
+                        var idx = $e.index();
+                        var itemsPerSlide = 3;
+                        var totalItems = $('.carousel-item').length;
+                        if (idx >= totalItems - (itemsPerSlide - 1)) {
+                            var it = itemsPerSlide - (totalItems - idx);
+                            for (var i = 0; i < it; i++) {
+                                // append slides to end
+                                if (e.direction == "left") {
+                                    $('.carousel-item').eq(i).appendTo('.carousel-inner');
+                                }
+                                else {
+                                    $('.carousel-item').eq(0).appendTo('.carousel-inner');
+                                }
+                            }
+                        }
+                    });
+                    /* show lightbox when clicking a thumbnail */
+                    $('a.thumb').click(function (event) {
+                        event.preventDefault();
+                        var content = $('.modal-body');
+                        content.empty();
+                        var title = $(this).attr("title");
+                        $('.modal-title').html(title);
+                        content.html($(this).html());
+                        $(".modal-profile").modal({ show: true });
+                    });
+                    $(window).scroll(function () {
+                        if ($(window).scrollTop() == 0)
+                            $('.navbar').removeClass('fixed-top');
+                        else
+                            $('.navbar').addClass('fixed-top');
+                    });
+                    var lstEmail = [
+                            <% foreach (var t in model.Users.ToList())
+                        { %>
+                            '<%:!t.Email.Equals(curUser.Email)?t.Email:""%>',
+                        <% }%>
+                    ]
+                    $("#update").click(function (event) {
+                        $("#errOldPass").html("");
+                        $("#errEmail").html("");
+                        $("#errName").html("");
+                    var iswrong = false;
+                    if ($("#oldPass").val() != '<%: curUser.Password %>') {
+                            $("#errOldPass").html("Correct Old password is REQUIRED");
+                            iswrong = true;
+                        }
+                    
+                        if ($("#email").val() == '') {
+                            $("#errEmail").html("Email Can't be Null");
+                            iswrong = true;
+                        }
+                        else if (lstEmail.includes($("#email").val()))
+                        {
+                            $("#errEmail").html("Email is Already Used");
+                            iswrong = true;
+                        }
+                        if ($("#name").val() == '') {
+                            $("#errName").html("Name Can't be Null");
+                            iswrong = true;
+                        }
+                        if (iswrong) {
+                            return;
+                        }
+                        $("#form1").submit();
+                        
+                    })
+                })
+            </script>
+            <footer>
+                  
+            </footer>
+        </form>
+</body>
+</html>
