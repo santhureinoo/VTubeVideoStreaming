@@ -7,7 +7,7 @@
         One Microsoft Way<br />
         Redmond, WA 98052-6399<br />
         <abbr title="Phone">P:</abbr>
-        Mandalay
+        Mandalay, Myanmar
     </address>
     KO GYI KYAW
     <address>
